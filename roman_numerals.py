@@ -48,7 +48,7 @@ class Number:
         del self._roman_value
 
 
-if __name__ is "__main__":
+if __name__ == "__main__":
     first_number = Number("VIII")
     second_number = Number(10)
 
