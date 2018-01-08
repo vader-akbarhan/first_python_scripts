@@ -1,13 +1,32 @@
 import requests 
 from bs4 import BeautifulSoup
 
-url = 'http://eliascanetti.org/bg/category/novini/'
-r = requests.get(url)
-r_html = r.text
 
-soup = BeautifulSoup(r_html, "lxml")
-titles = soup.find_all('h2', {'class': 'entry-title'})
+def find_titles(soup):
 
-for list_of_tags in titles: 
-    for inner_tag in list_of_tags.contents[0]:
-        print(inner_tag, end="\n\n")
+    titles = soup.find_all('h2', {'class': 'entry-title'})
+
+    for title in titles:
+        title_text = title.contents[0].get_text()
+        title_url = title.contents[0]['href']
+
+        print(title_text)
+        print(title_url)
+        print()
+
+
+if __name__ == "__main__":
+
+    url = 'http://eliascanetti.org/bg/category/novini/' # initial page
+
+    while True:
+        response = requests.get(url)
+        soup = BeautifulSoup(response.text, 'html.parser')
+        find_titles(soup)
+
+        next_page = soup.select('a.pagination-next')
+
+        if next_page:
+            url = next_page[0]['href']
+        else:
+            break
